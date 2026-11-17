@@ -1,0 +1,59 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-sm p-4">
+
+        <h3 class="mb-2">Create Examination Slot</h3>
+
+        <p class="text-muted">
+            Examination: <strong>{{ exam.title }}</strong>
+        </p>
+
+        <hr>
+
+        <form method="POST">
+
+            <div class="mb-3">
+                <label class="form-label">Examination Date and Time</label>
+
+                <input
+                    type="datetime-local"
+                    name="slot_time"
+                    class="form-control"
+                    required
+                >
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Maximum Students</label>
+
+                <input
+                    type="number"
+                    name="capacity"
+                    class="form-control"
+                    min="1"
+                    placeholder="Enter maximum students"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Create Slot
+            </button>
+
+            <a href="{{ url_for('dashboard') }}"
+               class="btn btn-secondary">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

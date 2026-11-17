@@ -1,0 +1,63 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>All Bookings</h2>
+
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+            Back to Dashboard
+        </a>
+    </div>
+
+    <div class="admin-panel">
+
+        <h4 class="mb-3">Booking List</h4>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Student Name</th>
+                    <th>Student Email</th>
+                    <th>Examination</th>
+                    <th>Slot Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for b in bookings %}
+                <tr>
+                    <td>{{ b.id }}</td>
+                    <td>{{ b.student_name }}</td>
+                    <td>{{ b.student_email }}</td>
+                    <td>{{ b.exam_title }}</td>
+                    <td>{{ b.slot_time }}</td>
+                    <td>
+                        {% if b.status == 'booked' %}
+                            <span class="badge bg-success">Booked</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Cancelled</span>
+                        {% endif %}
+                    </td>
+                </tr>
+
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">
+                        No bookings available.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

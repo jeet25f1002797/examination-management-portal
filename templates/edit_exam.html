@@ -1,0 +1,305 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Edit Examination</h4>
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <!-- Examination Title -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        Examination Title
+                    </label>
+
+                    <input type="text"
+                           name="title"
+                           class="form-control"
+                           value="{{ exam.title }}"
+                           required>
+                </div>
+
+                <!-- Course -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        Course
+                    </label>
+
+                    <select name="course_id"
+                            class="form-select"
+                            required>
+
+                        {% for course in courses %}
+                        <option value="{{ course.id }}"
+                            {% if course.id == exam.course_id %}
+                                selected
+                            {% endif %}>
+                            {{ course.code }} - {{ course.name }}
+                        </option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        Description
+                    </label>
+
+                    <textarea name="description"
+                              class="form-control"
+                              rows="3">{{ exam.description or '' }}</textarea>
+                </div>
+
+                <hr>
+
+                <h5 class="mb-3">Examination Schedule</h5>
+
+                <!-- Exam Date -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        Examination Date
+                    </label>
+
+                    <input type="date"
+                           name="exam_date"
+                           class="form-control"
+                           value="{{ exam.exam_date or '' }}"
+                           required>
+                </div>
+
+                <!-- Exam Time -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        Examination Time
+                    </label>
+
+                    <input type="time"
+                           name="exam_time"
+                           class="form-control"
+                           value="{{ exam.exam_time or '' }}"
+                           required>
+                </div>
+
+                <hr>
+
+                <h5 class="mb-3">Student Booking Window</h5>
+
+                <!-- Booking Start -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        Booking Opens
+                    </label>
+
+                    <input type="datetime-local"
+                           name="booking_start"
+                           class="form-control"
+                           value="{{ exam.booking_start or '' }}"
+                           required>
+                </div>
+
+                <!-- Booking End -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        Booking Closes
+                    </label>
+
+                    <input type="datetime-local"
+                           name="booking_end"
+                           class="form-control"
+                           value="{{ exam.booking_end or '' }}"
+                           required>
+                </div>
+
+                <hr>
+
+                <!-- Examination Rubrics -->
+                <h5 class="mb-3">Examination Rubrics</h5>
+
+                <!-- Rubric 1 -->
+                <div class="row g-2 align-items-end mb-3">
+
+                    <div class="col-md-4">
+                        <label class="form-label">Criterion Name</label>
+
+                        <input type="text"
+                               name="rubric_criteria[]"
+                               class="form-control"
+                               placeholder="e.g. Practical Knowledge"
+                               value="{{ rubrics[0].criterion if rubrics|length > 0 else '' }}">
+                    </div>
+
+                    <div class="col-md-5">
+                        <label class="form-label">Description</label>
+
+                        <input type="text"
+                               name="rubric_descriptions[]"
+                               class="form-control"
+                               placeholder="Enter description"
+                               value="{{ rubrics[0].description if rubrics|length > 0 else '' }}">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Maximum Marks</label>
+
+                        <input type="number"
+                               name="rubric_marks[]"
+                               class="form-control"
+                               min="1"
+                               placeholder="Enter marks"
+                               value="{{ rubrics[0].max_marks if rubrics|length > 0 else '' }}">
+                    </div>
+
+                </div>
+
+                <!-- Rubric 2 -->
+                <div class="row g-2 align-items-end mb-3">
+
+                    <div class="col-md-4">
+                        <input type="text"
+                               name="rubric_criteria[]"
+                               class="form-control"
+                               placeholder="Criterion Name"
+                               value="{{ rubrics[1].criterion if rubrics|length > 1 else '' }}">
+                    </div>
+
+                    <div class="col-md-5">
+                        <input type="text"
+                               name="rubric_descriptions[]"
+                               class="form-control"
+                               placeholder="Enter description"
+                               value="{{ rubrics[1].description if rubrics|length > 1 else '' }}">
+                    </div>
+
+                    <div class="col-md-3">
+                        <input type="number"
+                               name="rubric_marks[]"
+                               class="form-control"
+                               min="1"
+                               placeholder="Enter marks"
+                               value="{{ rubrics[1].max_marks if rubrics|length > 1 else '' }}">
+                    </div>
+
+                </div>
+                <!-- Rubric 3 -->
+                 <div class="row g-2 align-items-end mb-3">
+
+    <div class="col-md-4">
+        <input type="text"
+               name="rubric_criteria[]"
+               class="form-control"
+               placeholder="Criterion Name"
+               value="{{ rubrics[2].criterion if rubrics|length > 2 else '' }}">
+    </div>
+
+    <div class="col-md-5">
+        <input type="text"
+               name="rubric_descriptions[]"
+               class="form-control"
+               placeholder="Enter description"
+               value="{{ rubrics[2].description if rubrics|length > 2 else '' }}">
+    </div>
+
+    <div class="col-md-3">
+        <input type="number"
+               name="rubric_marks[]"
+               class="form-control"
+               min="1"
+               placeholder="Enter marks"
+               value="{{ rubrics[2].max_marks if rubrics|length > 2 else '' }}">
+    </div>
+
+                </div>
+
+
+                <!-- Rubric 4 -->
+                 <div class="row g-2 align-items-end mb-3">
+
+    <div class="col-md-4">
+        <input type="text"
+               name="rubric_criteria[]"
+               class="form-control"
+               placeholder="Criterion Name"
+               value="{{ rubrics[3].criterion if rubrics|length > 3 else '' }}">
+    </div>
+
+    <div class="col-md-5">
+        <input type="text"
+               name="rubric_descriptions[]"
+               class="form-control"
+               placeholder="Enter description"
+               value="{{ rubrics[3].description if rubrics|length > 3 else '' }}">
+    </div>
+
+    <div class="col-md-3">
+        <input type="number"
+               name="rubric_marks[]"
+               class="form-control"
+               min="1"
+               placeholder="Enter marks"
+               value="{{ rubrics[3].max_marks if rubrics|length > 3 else '' }}">
+    </div>
+
+                </div>
+
+
+                <!-- Rubric 5 -->
+                 <div class="row g-2 align-items-end mb-3">
+
+    <div class="col-md-4">
+        <input type="text"
+               name="rubric_criteria[]"
+               class="form-control"
+               placeholder="Criterion Name"
+               value="{{ rubrics[4].criterion if rubrics|length > 4 else '' }}">
+    </div>
+
+    <div class="col-md-5">
+        <input type="text"
+               name="rubric_descriptions[]"
+               class="form-control"
+               placeholder="Enter description"
+               value="{{ rubrics[4].description if rubrics|length > 4 else '' }}">
+    </div>
+
+    <div class="col-md-3">
+        <input type="number"
+               name="rubric_marks[]"
+               class="form-control"
+               min="1"
+               placeholder="Enter marks"
+               value="{{ rubrics[4].max_marks if rubrics|length > 4 else '' }}">
+    </div>
+
+                 </div>
+
+                <hr>
+
+                <!-- Buttons -->
+                <button type="submit" class="btn btn-primary">
+                    Update Examination
+                </button>
+
+                <a href="{{ url_for('dashboard') }}"
+                   class="btn btn-secondary">
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

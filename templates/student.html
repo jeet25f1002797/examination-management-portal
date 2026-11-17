@@ -1,0 +1,217 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Student Dashboard</h1>
+<!-- Student Dashboard Statistics -->
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-xl-5 g-3 mb-4">
+
+    <!-- Available Examinations -->
+    <div class="col">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-2">Available Examinations</p>
+                <h2 class="fw-bold">{{ available_examinations }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Available Slots -->
+    <div class="col">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-2">Available Slots</p>
+                <h2 class="fw-bold">{{ available_slots }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Examinations -->
+    <div class="col">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-2">Upcoming Examinations</p>
+                <h2 class="fw-bold">{{ upcoming_examinations }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booked Slots -->
+    <div class="col">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-2">Booked Slots</p>
+                <h2 class="fw-bold">{{ booked_slots }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Published Results -->
+    <div class="col">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-muted mb-2">Published Results</p>
+                <h2 class="fw-bold">{{ published_results }}</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Available Examination Slots -->
+<section class="panel">
+    <h3>Available slots</h3>
+
+    <div class="table-responsive">
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th>Course</th>
+                    <th>Exam</th>
+                     <th>Booking Period</th>
+                    <th>Examiner</th>
+                    <th>Slot Time</th>
+                    <th>Seats</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for s in slots %}
+
+                <tr>
+                    <td>{{ s.code }}</td>
+
+                    <td>{{ s.title }}</td>
+                    <td>
+                      {% if s.booking_start and s.booking_end %}
+
+                      <strong>From:</strong>
+                      {{ s.booking_start.replace('T', ' ') }}
+                      <strong>To:</strong>
+                      {{ s.booking_end.replace('T', ' ') }}
+
+                      {% else %}
+                       Not configured
+                      {% endif %}
+                     </td>
+                    
+
+                    <td>{{ s.examiner_name }}</td>
+
+                    <td>{{ s.slot_time }}</td>
+
+                    <td>
+                        {{ s.booked }}/{{ s.capacity }}
+                    </td>
+                    
+                    <td>
+                        <form method="post"
+                              action="{{ url_for('book_slot', slot_id=s.id) }}">
+
+                            <button class="btn btn-primary btn-sm"
+                               {% if s.booked >= s.capacity or not booking_open %}disabled{% endif %}>
+                                    Book
+                            </button>
+
+                        </form>
+                    </td>
+                </tr>
+
+                {% else %}
+
+                <tr>
+                    <td colspan="7" class="text-center">
+                        No slots available.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+<!-- Student Bookings and Results -->
+<section class="panel mt-3">
+
+    <h3>My bookings and results</h3>
+
+    <div class="table-responsive">
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th>Exam</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Marks</th>
+                    <th>Feedback</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for b in bookings %}
+
+                <tr>
+                    <td>{{ b.title }}</td>
+
+                    <td>{{ b.slot_time }}</td>
+
+                    <td>{{ b.status }}</td>
+
+                    <td>
+                        {% if b.marks is not none %}
+                           {{ b.marks }}
+                        {% elif b.status == "cancelled" %}
+                              cancelled
+                        {% else %}
+                               Pending
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {{ b.feedback or "—" }}
+                    </td>
+
+                    <td>
+                        {% if b.status == 'booked' and b.marks is none %}
+
+                            <form method="post"
+                                  action="{{ url_for('cancel_booking', booking_id=b.id) }}">
+
+                                <button class="btn btn-outline-danger btn-sm">
+                                    Cancel
+                                </button>
+
+                            </form>
+
+                        {% endif %}
+                    </td>
+                </tr>
+
+                {% else %}
+
+                <tr>
+                    <td colspan="6" class="text-center">
+                        No bookings yet.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+{% endblock %}

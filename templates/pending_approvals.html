@@ -1,0 +1,61 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Pending Examiner Approvals</h2>
+
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+            Back to Dashboard
+        </a>
+    </div>
+
+    <div class="admin-panel">
+
+        <h4 class="mb-3">Examiners Awaiting Approval</h4>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Examiner Name</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for p in pending %}
+                <tr>
+                    <td>{{ p.id }}</td>
+                    <td>{{ p.name }}</td>
+                    <td>{{ p.email }}</td>
+                    <td>
+                        <form method="POST"
+                              action="{{ url_for('approve_examiner', user_id=p.id) }}">
+
+                            <button type="submit" class="btn btn-success btn-sm">
+                                Approve
+                            </button>
+
+                        </form>
+                    </td>
+                </tr>
+
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">
+                        No pending examiner approvals.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}

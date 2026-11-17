@@ -1,0 +1,95 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>All Examiners</h2>
+
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+            Back to Dashboard
+        </a>
+    </div>
+
+    <div class="admin-panel">
+
+        <h4 class="mb-3">Examiner List</h4>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Approval Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for e in examiners %}
+                <tr>
+                    <td>{{ e.id }}</td>
+                    <td>{{ e.name }}</td>
+                    <td>{{ e.email }}</td>
+
+                    <td>
+                        {% if e.approved %}
+                            <span class="badge bg-success">Approved</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        {% endif %}
+
+                        {% if not e.active %}
+                            <span class="badge bg-danger">Deactivated</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+    {% if not e.approved %}
+
+        <form method="POST"
+              action="{{ url_for('approve_examiner', user_id=e.id) }}">
+            <button type="submit" class="btn btn-success btn-sm">
+                Approve
+            </button>
+        </form>
+
+    {% elif e.active == 1 %}
+
+        <form method="POST"
+              action="{{ url_for('deactivate_examiner', user_id=e.id) }}">
+            <button type="submit" class="btn btn-danger btn-sm">
+                Deactivate
+            </button>
+        </form>
+
+    {% else %}
+
+        <form method="POST"
+              action="{{ url_for('activate_examiner', user_id=e.id) }}">
+            <button type="submit" class="btn btn-primary btn-sm">
+                Activate
+            </button>
+        </form>
+
+    {% endif %}
+</td>
+                </tr>
+
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">
+                        No examiners registered.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,71 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>All Examinations</h2>
+
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+            Back to Dashboard
+        </a>
+    </div>
+
+    <div class="admin-panel">
+
+        <h4 class="mb-3">Examination List</h4>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Examination</th>
+                    <th>Course Code</th>
+                    <th>Course Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for e in exams %}
+                <tr>
+                    <td>{{ e.title }}</td>
+                    <td>{{ e.code }}</td>
+                    <td>{{ e.course_name }}</td>
+                    <td>{{ e.description }}</td>
+
+                    <td>
+                        <a href="{{ url_for('edit_exam', exam_id=e.id) }}"
+                           class="btn btn-warning btn-sm">
+                            Edit
+                        </a>
+
+                        <form method="POST"
+                              action="{{ url_for('delete_exam', exam_id=e.id) }}"
+                              style="display:inline;">
+
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Delete this examination?')">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">
+                        No examinations available.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}
